@@ -1,14 +1,19 @@
 import './App.css';
+import FileSelector from './fileSelector';
 
 function App() {
+  const handleFile = (data) => {
+    console.log('sending data:', data);
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <p>PolicyBot</p>
       </header>
-      <body className="App-body">
-        <p>Upload your traffic file</p>
-      </body>
+      <main className="App-body">
+        <FileSelector onFileSelected={handleFile} />
+      </main>
     </div>
   );
 }
