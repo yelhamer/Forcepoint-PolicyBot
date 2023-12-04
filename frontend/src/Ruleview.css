@@ -1,0 +1,39 @@
+/* Stylesheet for ruleview */
+.RuleviewCSS {
+    display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  }
+  
+  .exportButton {
+    margin: 10px 0;
+  }
+
+  /*prolly not needed in the long run, if the reset function is also changed/removed*/
+  .resetButton {
+    margin-right: 30px;
+  }
+
+  .addRuleButton {
+    margin: 10px 0;
+  }
+
+  .table {
+    border-collapse: collapse;
+  }
+
+  .rowActions {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .rowActions button {
+    flex: 1;
+  }
+  
+  th, td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 4px;
+  }
