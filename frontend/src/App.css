@@ -1,9 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+
 .App {
   text-align: center;
 }
 
 .App-header {
-  background-color: #fff;
-  font-size: 16;
+  background-color: #d9d9d9;
+  padding: 0.5rem 0rem;
+  font-size: 24px;
+  font-family: Kanit, sans-serif;
   color: #000;
+}
+
+.App-header p {
+  margin: 0;
+}
+
+.App-body {
+  margin: 15rem 1rem;
 }
