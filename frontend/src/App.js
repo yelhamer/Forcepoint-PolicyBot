@@ -1,5 +1,5 @@
 import './App.css';
-import FileSelector from './fileSelector';
+import FileSelector from './FileSelector';
 
 function App() {
   const handleFile = (data) => {
