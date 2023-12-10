@@ -1,4 +1,5 @@
 import React from 'react';
+import { fileContent } from './schemas';
 
 function FileSelector({ onFileSelected }) {
   const handleFileSelect = (e) => {
@@ -9,11 +10,12 @@ function FileSelector({ onFileSelected }) {
     const reader = new FileReader();
     reader.readAsText(e.target.files[0]);
 
-    // Once the file is read, parse to JSON and pass it to the onFileSelected prop
-    reader.onload = function (evt) {
+    // Once the file is read, parse to JSON, validate contents and pass it to the onFileSelected prop
+    reader.onload = async function (evt) {
       try {
         const data = JSON.parse(evt.target.result);
-        onFileSelected(data);
+        const validatedData = await fileContent.validate(data);
+        onFileSelected(validatedData);
       } catch (error) {
         alert(error);
       }
