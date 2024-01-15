@@ -5,7 +5,7 @@ import json
 import uvicorn
 from enum import Enum
 from pydantic import BaseModel, field_validator
-from traffic.forcepoint.models import ForcePointLogEntry
+from formats.traffic.forcepoint.models import ForcePointLogEntry
 from pydantic.networks import IPvAnyNetwork, IPvAnyAddress
 
 app = FastAPI()
