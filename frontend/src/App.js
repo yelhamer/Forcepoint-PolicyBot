@@ -40,10 +40,15 @@ function App() {
         {buttonText}
       </button>
       <main className="App-body">
-        {showRuleview ? <Ruleview /> : <FileSelector onFileSelected={handleFile} />}
-        <div className="Loading-indicator">
-          {showRuleview ? null : loading ? <Spinner /> : <button onClick={handleFile}>GO!</button>}
-        </div>
+        {showRuleview ? (
+          <Ruleview />
+        ) : loading ? (
+          <div className="Loading-indicator">
+            <Spinner />
+          </div>
+        ) : (
+          <FileSelector setLoading={setLoading} onFileSelected={handleFile} />
+        )}
       </main>
     </div>
   );
