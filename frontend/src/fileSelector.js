@@ -14,8 +14,8 @@ function FileSelector({ onFileSelected }) {
     reader.onload = async function (evt) {
       try {
         const data = JSON.parse(evt.target.result);
-        const validatedData = await fileContent.validate(data);
-        onFileSelected(validatedData);
+        await fileContent.validate(data);
+        onFileSelected(e.target.files[0]);
       } catch (error) {
         alert(error);
       }
