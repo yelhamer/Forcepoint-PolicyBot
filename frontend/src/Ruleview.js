@@ -115,8 +115,8 @@ const Ruleview = () => {
               <th>Move rules</th>
               <th>Source</th>
               <th>Destination</th>
-              <th>Protocol</th>
-              <th>Rule</th>
+              <th>Service</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
