@@ -6,5 +6,9 @@ export default async function uploadJson(file) {
     body: formData,
   });
 
+  if (!response.ok) {
+    return null;
+  }
+
   return await response.json();
 }

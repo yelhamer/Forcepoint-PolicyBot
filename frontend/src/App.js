@@ -24,11 +24,15 @@ function App() {
   const buttonText = showRuleview ? 'Back to front page' : 'To rule edit';
 
   const handleFile = async (file) => {
-    console.log('sending data:', file);
+    console.log('sending data:', file); // for debugging
     setLoading(true);
     const response = await uploadJson(file);
-    console.log(response);
+    console.log(response); // for debugging
     setLoading(false);
+    // Right now backend only responds with the same content back so the ruleview shows just the hardcoded data
+    if (response) {
+      handleChangeView();
+    }
   };
 
   return (
