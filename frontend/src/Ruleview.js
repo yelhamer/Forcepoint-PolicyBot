@@ -115,8 +115,8 @@ const Ruleview = () => {
               <th>Move rules</th>
               <th>Source</th>
               <th>Destination</th>
-              <th>Protocol</th>
-              <th>Rule</th>
+              <th>Service</th>
+              <th>Action</th>
             </tr>
           </thead>
           <tbody>
@@ -131,7 +131,7 @@ const Ruleview = () => {
                 {row.map((cell, columnIndex) => (
                   <td key={columnIndex}>
                   {columnIndex === 2 || columnIndex === 3 ? (
-                    <select
+                    <select 
                       value={cell}
                       onChange={(e) =>
                         handleCellChange(
@@ -155,6 +155,7 @@ const Ruleview = () => {
                     </select>
                   ) : (
                     <input
+                      className="editableFields"
                       type="text"
                       value={cell}
                       onChange={(e) =>
@@ -194,7 +195,7 @@ const Ruleview = () => {
   //Ruleview display
   return (
     <div className="RuleviewCSS"> {/* Apply the CSS class */}
-      <h2>Edit rules</h2>
+      <h2 className="header">Edit rules</h2>
       <EditableTable />
       {/* Add more content */}
     </div>

@@ -1,6 +1,6 @@
 .spinner {
-    border: 4px solid rgba(0, 0, 0, 0.1);
-    border-top: 4px solid #3498db;
+    border: 8px solid rgba(0, 0, 0, 0.1);
+    border-top: 8px solid #45bead;
     border-radius: 50%;
     width: 40px;
     height: 40px;
