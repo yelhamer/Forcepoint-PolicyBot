@@ -1,10 +1,13 @@
 from fastapi import FastAPI, File, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from typing import List
 import json
 import uvicorn
 
 app = FastAPI()
+
+app.add_middleware(CORSMiddleware, allow_origins=['http://localhost:3000'])
 
 
 @app.get("/")

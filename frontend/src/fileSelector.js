@@ -1,12 +1,12 @@
 import React from 'react';
 import { fileContent } from './schemas';
 
-function FileSelector({ onFileSelected }) {
+function FileSelector({ setLoading, onFileSelected }) {
   const handleFileSelect = (e) => {
     if (!e.target.files) {
       return;
     }
-
+    setLoading(true);
     const reader = new FileReader();
     reader.readAsText(e.target.files[0]);
 
@@ -14,11 +14,13 @@ function FileSelector({ onFileSelected }) {
     reader.onload = async function (evt) {
       try {
         const data = JSON.parse(evt.target.result);
-        const validatedData = await fileContent.validate(data);
-        onFileSelected(validatedData);
+        await fileContent.validate(data);
+        await onFileSelected(e.target.files[0]);
       } catch (error) {
         alert(error);
       }
+
+      setLoading(false);
     };
 
     reader.onerror = function () {
