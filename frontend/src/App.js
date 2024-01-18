@@ -11,6 +11,8 @@ function App() {
 
   //for the loading spinner
   const [loading, setLoading] = useState(false);
+  // for sending the data received from backend to Ruleview
+  const [data, setData] = useState([]);
 
   // Can be used to change between front page and rule page
   const handleChangeView = () => {
@@ -28,6 +30,13 @@ function App() {
     setLoading(true);
     const response = await uploadJson(file);
     console.log(response); // for debugging
+    //setData(response);  //<- this one can be used when the response matches the right format
+    setData([             //    which is this ->
+      ['192.68.1.0', 'External', 'HTTP', 'Allow'],
+      ['192.68.11.12', '192.68.1.0', 'TCP', 'Deny'],
+      ['192.68.1.0', 'External', 'HTTP', 'Allow'],
+      ['192.68.11.12', '192.68.1.0', 'TCP', 'Deny'],
+    ]);
     setLoading(false);
     // Right now backend only responds with the same content back so the ruleview shows just the hardcoded data
     if (response) {
@@ -45,7 +54,7 @@ function App() {
       </button>
       <main className="App-body">
         {showRuleview ? (
-          <Ruleview />
+          <Ruleview initialTable={data}/>
         ) : loading ? (
           <div className="Loading-indicator">
             <Spinner />

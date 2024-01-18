@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
 import './Ruleview.css';
 
-const Ruleview = () => {
+const Ruleview = ({initialTable}) => {
   const EditableTable = () => {
-    const initialData = [
-      ['192.68.1.0', 'External', 'HTTP', 'Allow'],
-      ['192.68.11.12', '192.68.1.0', 'TCP', 'Deny'],
-      // this will then be replaced by the list from backend
-    ];
+    console.log(initialTable);
+    const initialData = initialTable;
+
 
     const MethodOptions = ['HTTP', 'TCP', 'UDP', 'SSH']; // Options for protocol
     const RuleOptions = ['Allow', 'Deny']; // Options for rules
