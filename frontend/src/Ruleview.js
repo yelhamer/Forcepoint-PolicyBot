@@ -1,38 +1,83 @@
 import React, { useState } from 'react';
 import './Ruleview.css';
+import networkPorts from './networkPorts';
 
 const Ruleview = ({initialTable}) => {
   const EditableTable = () => {
-    console.log(initialTable);
     const initialData = initialTable;
 
-
-    const MethodOptions = ['HTTP', 'TCP', 'UDP', 'SSH']; // Options for protocol
-    const RuleOptions = ['Allow', 'Deny']; // Options for rules
-
     const [tableData, setTableData] = useState(initialData);
+    console.log("tabledata: ", tableData);
 
-    // Changes the table data to correspond to user input
-    const handleCellChange = (rowIndex, columnIndex, value) => {
-      const newData = [...tableData];
-      newData[rowIndex][columnIndex] = value;
-      setTableData(newData);
+    //ServiceOptions, uniqueservices and uniqueServices create a list to choose the service/Port from
+    const ServiceOptions = [
+      ...new Set(
+        initialData.flatMap((row) =>
+          Object.entries(row)
+            .filter(([key]) => key === 'Service')
+            .map(([, value]) => ({ Service: value, Port: row.Port }))
+        )
+      ),
+      ...networkPorts,
+    ];
+    
+    const uniqueservices = [
+      ...new Set(
+        ServiceOptions.flatMap((option) =>
+          (Array.isArray(option.Port) ? option.Port : [option.Port] || []).map((port) => ({
+            service: option.Service,
+            port,
+          }))
+        )
+      ),
+    ];
+    
+    const uniqueServices = [
+      ...new Map(
+        uniqueservices.map((item) => [JSON.stringify(item), item])
+      ).values(),
+    ];
+
+    // Creates a list for available actions, which are then filtered with uniqueActions and ActionOptions
+    const availableActions = ['Allow', 'Deny', 'Drop', 'Reject', 'CustomAction'];
+
+    const uniqueActions = Array.from(
+      new Set([...initialData.map((row) => row.Action), ...availableActions])
+    );
+    
+    const ActionOptions = uniqueActions.map((action) => ({ Action: action }));
+
+    //Responsible for changing tableData when anything is edited
+    const handleCellChange = (rowIndex, key, value) => {
+      setTableData((prevData) => {
+        const newData = [...prevData];
+        newData[rowIndex] = {
+          ...newData[rowIndex],
+          ...(key === 'Service'
+            ? { [key]: value.service, Port: value.port }
+            : { [key]: value === undefined ? '' : value }),
+        };
+    
+        return newData;
+      });
     };
 
-    // Handles deleting row
+    // Deletes row from tableData
     const handleDeleteRow = (rowIndex) => {
       setTableData((prevData) => prevData.filter((_, index) => index !== rowIndex));
     };
 
-    // Handles adding new rule/row to table
+    // Adds new rule/row to tableData
     const handleAddRow = () => {
-      const newRow = ['0.0.0.0', '0.0.0.0', MethodOptions[0], RuleOptions[0]]; // Initial values for the new row
+      const newRow = {'Source': '0.0.0.0', 'Destination': '0.0.0.0', 'Port': 'any', 'Service': 'any'}; // Initial values for the new row
+      console.log("adding rule:  ", newRow);
       setTableData((prevData) => [...prevData, newRow]);
     };
 
-    // Makes an identical rule below it
+    // Makes an identical rule below/after it into tableData
     const handleDuplicateRow = (rowIndex) => {
-      const duplicatedRow = [...tableData[rowIndex]];
+      const duplicatedRow = { ...tableData[rowIndex] };
+    
       setTableData((prevData) => {
         const newData = [...prevData];
         newData.splice(rowIndex + 1, 0, duplicatedRow);
@@ -97,12 +142,12 @@ const Ruleview = ({initialTable}) => {
       window.alert('XML export function here...');
     };
 
-    //This can then be modified to choose another Json file etc.
+    //This can then be modified to choose another Json file etc.? now it just resets to initial values
     const handleReset = () => {
       setTableData(initialData);
     };
 
-    //The table display
+    //EditableTable return
     return (
       <div>
         <button className='resetButton' onClick={handleReset}>Reset</button>
@@ -113,60 +158,65 @@ const Ruleview = ({initialTable}) => {
               <th>Move rules</th>
               <th>Source</th>
               <th>Destination</th>
-              <th>Service</th>
+              <th>Service (Port)</th>
               <th>Action</th>
             </tr>
           </thead>
           <tbody>
             {tableData.map((row, rowIndex) => (
               <tr key={rowIndex}>
-                <td className="rowActions"> 
-                <button onClick={() => handleMoveToTop(rowIndex)}>↑↑</button>
-                <button onClick={() => handleMoveToBottom(rowIndex)}>↓↓</button>
-                <button onClick={() => handleMoveUp(rowIndex)}>↑</button>
-                <button onClick={() => handleMoveDown(rowIndex)}>↓</button>
+                <td className="rowActions">
+                  <button onClick={() => handleMoveToTop(rowIndex)}>↑↑</button>
+                  <button onClick={() => handleMoveToBottom(rowIndex)}>↓↓</button>
+                  <button onClick={() => handleMoveUp(rowIndex)}>↑</button>
+                  <button onClick={() => handleMoveDown(rowIndex)}>↓</button>
                 </td>
-                {row.map((cell, columnIndex) => (
-                  <td key={columnIndex}>
-                  {columnIndex === 2 || columnIndex === 3 ? (
-                    <select 
-                      value={cell}
-                      onChange={(e) =>
-                        handleCellChange(
-                          rowIndex,
-                          columnIndex,
-                          e.target.value
-                        )
-                      }
-                    >
-                      {columnIndex === 2
-                        ? MethodOptions.map((option, index) => (
-                            <option key={index} value={option}>
-                              {option}
-                            </option>
-                          ))
-                        : RuleOptions.map((option, index) => (
-                            <option key={index} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                    </select>
-                  ) : (
-                    <input
-                      className="editableFields"
-                      type="text"
-                      value={cell}
-                      onChange={(e) =>
-                        handleCellChange(
-                          rowIndex,
-                          columnIndex,
-                          e.target.value
-                        )
-                      }
-                    />
-                  )}
+                <td>
+                  <input
+                    className="editableFields"
+                    type="text"
+                    value={row['Source']}
+                    onChange={(e) => handleCellChange(rowIndex, 'Source', e.target.value)}
+                  />
                 </td>
-                ))}
+                <td>
+                  <input
+                    className="editableFields"
+                    type="text"
+                    value={row['Destination']}
+                    onChange={(e) => handleCellChange(rowIndex, 'Destination', e.target.value)}
+                  />
+                </td>
+                <td>
+                  <select
+                    value={JSON.stringify({ service: row['Service'], port: row['Port'] })}
+                    onChange={(e) => {
+                      const { service, port } = JSON.parse(e.target.value);
+                      handleCellChange(rowIndex, 'Service', { service, port });
+                    }}
+                  >
+                    {uniqueServices.map((option) => (
+                      <option
+                        key={`${option.service}-${option.port}`}
+                        value={JSON.stringify(option)}
+                      >
+                        {`${option.service} (${option.port})`}
+                      </option>
+                    ))}
+                  </select>
+                </td>
+                <td>
+                  <select
+                    value={row['Action']}
+                    onChange={(e) => handleCellChange(rowIndex, 'Action', e.target.value)}
+                  >
+                    {ActionOptions.map((option, index) => (
+                      <option key={`${option.Action}-${index}`} value={option.Action}>
+                        {option.Action}
+                      </option>
+                    ))}
+                  </select>
+                </td>
                 <td className="rowActions">
                   <button onClick={() => handleDuplicateRow(rowIndex)}>
                     Duplicate
@@ -190,12 +240,11 @@ const Ruleview = ({initialTable}) => {
     );
   };
 
-  //Ruleview display
+  //Ruleview return
   return (
-    <div className="RuleviewCSS"> {/* Apply the CSS class */}
+    <div className="RuleviewCSS">
       <h2 className="header">Edit rules</h2>
       <EditableTable />
-      {/* Add more content */}
     </div>
   );
 };
