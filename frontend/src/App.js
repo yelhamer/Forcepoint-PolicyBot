@@ -35,7 +35,7 @@ function App() {
     setData([      // This data is just for testing purposes.
       {'Source': '10.178.0.0/16', 'Destination': '10.150.103.106', 'Service': ['TCP','Do','Re','Mi'], 'Port': '453',
         'Action': 'Allow'},
-      {'Source': '10.178.0.0/16', 'Destination': '10.18.93.109', 'Service': ['TCP'], 'Port': '453',
+      {'Source': '10.178.0.0/16', 'Destination': '10.18.93.109', 'Service': ['HTTP'], 'Port': '2',
         'Action': 'Allow'},
       {'Source': '10.78.0.0/16', 'Destination': '10.18.93.110', 'Service': ['UDP'], 'Port': '888', 
         'Action': 'Allow'},
