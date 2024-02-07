@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './Ruleview.css';
 import networkPorts from './networkPorts';
+import defaultPorts from './defaultPorts';
+
 import initializeUniqueServices from './uniqueGenerator';
 
 const Ruleview = ({initialTable}) => {
@@ -186,7 +188,11 @@ const Ruleview = ({initialTable}) => {
                         key={index}
                         value={`${option.service}-${option.port}`}
                       >
-                        {`${option.service} (${option.port})`}
+                        {`${option.service} 
+                          ${option.port && 
+                          defaultPorts.some(pair => pair.Service === option.service && pair.Port === option.port) 
+                          ? '' : `(${option.port})`}`
+                        }
                       </option>
                     ))}
                   </select>
