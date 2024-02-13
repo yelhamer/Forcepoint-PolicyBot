@@ -2,46 +2,54 @@
 
 .App {
   background-color: rgb(0, 0, 0);
-  background: rgb(69,190,173);
-  background: linear-gradient(0deg, rgba(69,190,173,1) 0%, rgba(13,92,82,1) 35%, rgba(0,0,0,1) 98%);
+  background: rgb(69, 190, 173);
+  background: linear-gradient(
+    0deg,
+    rgba(69, 190, 173, 1) 0%,
+    rgba(13, 92, 82, 1) 35%,
+    rgba(0, 0, 0, 1) 98%
+  );
   /*background-image: url(./background.png);*/
   background-size: cover;
   background-position: center;
-  min-height:100vh;
+  min-height: 100vh;
   background-attachment: fixed;
   color: white;
 }
 
 .App-header {
+  position: relative;
   text-align: center;
   background-color: #45bead;
   padding: 0.5rem 0rem;
-  font-size: 24px;
   font-family: Kanit, sans-serif;
   color: #000000;
 }
 
 .App-header p {
   margin: 0;
+  font-size: 24px;
 }
 
-.App-body {
-  margin: 0rem 1rem;
-  text-align: center;
+.App-header nav {
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.App-header ul {
+  margin: 0;
+  padding: 0;
   display: flex;
-  flex-direction: column;
-  align-items: center;
+  list-style: none;
+  gap: 1rem;
 }
 
-.Loading-indicator {
-  display: block;
-  padding: 14px;
+.App-header a {
+  font-size: 18px;
+  text-decoration: none;
 }
 
-.changeView {
-  text-align: center;
-  padding: 8px;
-  background-color: #45bead;
-  cursor: pointer;
-  margin: 20px;
+.App-header a.active {
 }
