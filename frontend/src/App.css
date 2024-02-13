@@ -1,29 +1,53 @@
 @import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
 
+:root {
+  --primary: #006b5f;
+  --on-primary: #ffffff;
+  --primary-container: #9ef2e3;
+  --on-primary-container: #00201c;
+  --secondary: #4a635e;
+  --on-secondary: #ffffff;
+  --secondary-container: #cce8e2;
+  --on-secondary-container: #06201c;
+  --tetriary: #456179;
+  --on-tetriary: #ffffff;
+  --tetriary-container: #cbe6ff;
+  --on-tetriary-container: #001e31;
+  --error-colour: #ba1a1a;
+  --on-error-colour: #ffffff;
+  --error-container: #ffdad6;
+  --on-error-container: #410002;
+  --surface: #f4fbf8;
+  --on-surface: #161d1b;
+  --outline-colour: #6f7976;
+  --outline-variant: #bec9c5;
+  --surface-container: #e9efec;
+}
+
 .App {
-  background-color: rgb(0, 0, 0);
-  background: rgb(69, 190, 173);
+  background-color: var(--surface);
+  /*background: rgb(69, 190, 173);
   background: linear-gradient(
     0deg,
     rgba(69, 190, 173, 1) 0%,
     rgba(13, 92, 82, 1) 35%,
     rgba(0, 0, 0, 1) 98%
   );
-  /*background-image: url(./background.png);*/
+  background-image: url(./background.png);*/
   background-size: cover;
   background-position: center;
   min-height: 100vh;
   background-attachment: fixed;
-  color: white;
+  color: var(--on-surface);
 }
 
 .App-header {
   position: relative;
   text-align: center;
-  background-color: #45bead;
+  background-color: var(--primary);
   padding: 0.5rem 0rem;
   font-family: Kanit, sans-serif;
-  color: #000000;
+  color: var(--on-primary);
 }
 
 .App-header p {
@@ -49,7 +73,9 @@
 .App-header a {
   font-size: 18px;
   text-decoration: none;
+  color: var(--on-primary);
 }
 
 .App-header a.active {
+  text-decoration: underline;
 }

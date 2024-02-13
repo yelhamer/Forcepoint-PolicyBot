@@ -14,7 +14,8 @@
 .changeView {
   text-align: center;
   padding: 8px;
-  background-color: #45bead;
+  background-color: var(--primary);
+  color: var(--on-primary);
   cursor: pointer;
   margin: 20px;
 }
