@@ -10,7 +10,7 @@ const Ruleview = ({initialTable}) => {
     const initialData = initialTable;
     const [uniqueServices, setUniqueServices] = useState([]);
     const [ActionOptions, setActionOptions] = useState([]);
-    console.log("unique services: ", uniqueServices);
+    //console.log("unique services: ", uniqueServices);
 
     useEffect(() => {
       //This code only needs to run once in the beginning, so i put it in an useEffect.
@@ -32,23 +32,39 @@ const Ruleview = ({initialTable}) => {
     console.log("tabledata: ", tableData);
     
     //Right now updates to the "Source" in the table only edits the first Source value in tableData
-      const handleCellChange = (rowIndex, key, value) => {
-        setTableData((prevData) => {
-          const newData = [...prevData];
-          const currentRow = { ...newData[rowIndex] };
-          
-          if (key === 'Service') {
-            currentRow[key] = [value.service];
-            currentRow['Port'] = value.port;
-          } else {
-            currentRow[key] = value === undefined ? '' : value;
-          }
-      
-          newData[rowIndex] = currentRow;
-          
-          return newData;
-        });
-      };
+    const handleCellChange = (rowIndex, columnName, value) => {
+      console.log("Editing Cells...");
+      setTableData((prevData) => {
+        const newData = [...prevData];
+        newData[rowIndex][columnName] = value;
+        return newData;
+      });
+    };
+    
+    const handleSourceChange = (rowIndex, sourceIndex, value) => {
+      console.log("Editing Source..");
+      setTableData((prevData) => {
+        const newData = [...prevData];
+        newData[rowIndex]['Source'][sourceIndex] = value;
+        return newData;
+      });
+    };
+
+    const handleDestinationChange = (rowIndex, destinationIndex, value) => {
+      setTableData((prevData) => {
+        const newData = [...prevData];
+        newData[rowIndex]['Destination'][destinationIndex] = value;
+        return newData;
+      });
+    };
+
+    const handleAddDestination = (rowIndex) => {
+      setTableData((prevData) => {
+        const newData = [...prevData];
+        newData[rowIndex]['Destination'] = [...newData[rowIndex]['Destination'], '']; // Add an empty destination
+        return newData;
+      });
+    };
 
     // Deletes row from tableData
     const handleDeleteRow = (rowIndex) => {
@@ -57,7 +73,7 @@ const Ruleview = ({initialTable}) => {
 
     // Adds new rule/row to tableData
     const handleAddRow = () => {
-      const newRow = {'Source': '0.0.0.0', 'Destination': '0.0.0.0', 'Port': 'any', 'Service': ['any'], 'Action': 'Allow'}; // Initial values for the new row
+      const newRow = {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['HTTP', 1],['SSH', 2]], 'Action': 'Allow'}; // Initial values for the new row
       console.log("adding rule:  ", newRow);
       setTableData((prevData) => [...prevData, newRow]);
     };
@@ -123,6 +139,29 @@ const Ruleview = ({initialTable}) => {
       });
     };
 
+    const handleAddSource = (rowIndex) => {
+      console.log("Adding Source..");
+      setTableData((prevData) => {
+        const newData = [...prevData];
+        console.log("Thedata: ", newData[rowIndex]['Source']);
+        newData[rowIndex]['Source'] = [...newData[rowIndex]['Source'], ''];
+        console.log("Thenewdata: ", newData[rowIndex]['Source']);
+        return newData;
+      });
+    };
+    
+    const handleKeyDown = (e, rowIndex, field, index) => {
+      if (e.key === 'Backspace' && e.target.value === '') {
+        setTableData((prevData) => {
+          const newData = [...prevData];
+          if (field === 'Source' || field === 'Destination') {
+            newData[rowIndex][field].splice(index, 1); // Remove empty value
+          }
+          return newData;
+        });
+      }
+    };
+
     // TO DO For exporting XML, this code does NOTHING really right now.
     const handleExport = () => {
       // TO DO tableData is the array to be exported
@@ -160,42 +199,68 @@ const Ruleview = ({initialTable}) => {
                   <button onClick={() => handleMoveDown(rowIndex)}>↓</button>
                 </td>
                 <td>
-                  <input
-                    className="editableFields"
-                    type="text"
-                    value={row['Source']}
-                    onChange={(e) => handleCellChange(rowIndex, 'Source', e.target.value)}
-                  />
+                  {row['Source'].map((source, index) => (
+                    <div key={index}>
+                      <input
+                        className="editableFields"
+                        type="text"
+                        value={source}
+                        onChange={(e) => handleSourceChange(rowIndex, index, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, rowIndex, 'Source', index)} 
+                      />
+                      {index === row['Source'].length - 1 && (
+                        <button onClick={() => handleAddSource(rowIndex)}>+</button>
+                      )}
+                    </div>
+                  ))}
                 </td>
                 <td>
-                  <input
-                    className="editableFields"
-                    type="text"
-                    value={row['Destination']}
-                    onChange={(e) => handleCellChange(rowIndex, 'Destination', e.target.value)}
-                  />
+                  {row['Destination'].map((destination, index) => (
+                    <div key={index}>
+                      <input
+                        className="editableFields"
+                        type="text"
+                        value={destination}
+                        onChange={(e) => handleDestinationChange(rowIndex, index, e.target.value)}
+                        onKeyDown={(e) => handleKeyDown(e, rowIndex, 'Destination', index)} 
+                      />
+                      {index === row['Destination'].length - 1 && (
+                        <button onClick={() => handleAddDestination(rowIndex)}>+</button>
+                      )}
+                    </div>
+                  ))}
                 </td>
                 <td>
-                  <select
-                    value={`${row.Service[0]}-${row.Port}`}
-                    onChange={(e) => {
-                      const [service, port] = e.target.value.split('-');
-                      handleCellChange(rowIndex, 'Service', { service, port });
-                    }}
-                  >
-                    {uniqueServices.map((option, index) => (
-                      <option
-                        key={index}
-                        value={`${option.service}-${option.port}`}
+                  {row.Service.map((servicePair, pairIndex) => (
+                    <div key={pairIndex}>
+                      <select
+                        value={`${servicePair[0]}-${servicePair[1]}`}
+                        onChange={(e) => {
+                          const [service, port] = e.target.value.split('-');
+                          const updatedServices = [...row.Service]; // Create a copy of the service array
+                          updatedServices[pairIndex] = [service, parseInt(port)]; // Update the selected pair
+                          handleCellChange(rowIndex, 'Service', updatedServices); // Pass the updated array to the handler
+                        }}
                       >
-                        {`${option.service} 
-                          ${option.port && 
-                          defaultPorts.some(pair => pair.Service === option.service && pair.Port === option.port) 
-                          ? '' : `(${option.port})`}`
-                        }
-                      </option>
-                    ))}
-                  </select>
+                        {uniqueServices.map((option, index) => (
+                          <option
+                            key={index}
+                            value={`${option[0]}-${option[1]}`}
+                          >
+                            {`${option[0]} 
+                              ${option[1] && 
+                              defaultPorts.some(
+                                pair => 
+                                pair[0] === option[0] && 
+                                pair[1] === option[1]) 
+                                ? '' 
+                                : `(${option[1]})`
+                            }`}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  ))}
                 </td>
                 <td>
                   <select
