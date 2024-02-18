@@ -7,5 +7,9 @@ class ForcepointGenerator(BaseGenerator):
         self.traffic = traffic
 
     def generate_rules(self, *options) -> ForcePointRuleSet:
+        for packet in self.traffic:
+            packet.src_ip
+            packet.dst_ip
+
         rules = [ForcepointRule(**{"Source": ["192.168.1.1"], "Destination": ["192.168.1.0"], "Service": [("TCP", 80)], "Action": "allow"})]
         return ForcePointRuleSet(rules)

@@ -1,7 +1,7 @@
 from pydantic import field_validator, Field
 from pydantic.networks import IPvAnyAddress
 from datetime import datetime
-from typing import List
+from typing import Set, List
 from models.traffic.base_traffic import BaseLogEntry, BaseTrafficLog
 
 
@@ -37,6 +37,12 @@ class ForcePointLogEntry(BaseLogEntry):
             raise ValueError(f"{port} is not a valid port number.")
         return port
 
+    def __eq__(self, other) -> bool:
+        return super().__eq__(other)
+
+    def __hash__(self) -> int:
+        return hash((self.src_ip, self.dst_ip, self.src_port, self.dst_port, self.service))
+
 
 class ForcePointTrafficLog(BaseTrafficLog):
-    root: List[ForcePointLogEntry]
+    root: Set[ForcePointLogEntry]

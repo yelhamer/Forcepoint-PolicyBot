@@ -1,6 +1,6 @@
-from models.rules.base_rule import BaseRule, BaseRuleSet, ActionsEnum
-from pydantic import BaseModel, RootModel, Field, validator
-from typing import List, Union, Optional, Tuple, Dict
+from models.rules.base_rule import BaseRuleSet, ActionsEnum
+from pydantic import BaseModel, Field
+from typing import List, Union, Tuple, Dict
 from pydantic.networks import IPvAnyAddress, IPvAnyNetwork, IPv4Address
 
 class ForcepointActions(ActionsEnum):
@@ -12,7 +12,9 @@ class ForcepointActions(ActionsEnum):
 class ForcepointRule(BaseModel):
     src_addrs: List[Union[IPvAnyAddress, IPvAnyNetwork]] = Field(alias="Source")
     dst_addrs: List[Union[IPvAnyAddress, IPvAnyNetwork]] = Field(alias="Destination")
-    services: List[Tuple[str, int]] = Field(alias="Service", min_length=1) # first element is the service name (DNS, HTTPS, TCP, etc.), second element is the destination port number
+    # first element is the service name (DNS, HTTPS, TCP, etc.)
+    # second element is the destination port number
+    services: List[Tuple[str, int]] = Field(alias="Service", min_length=1)
     action: ForcepointActions = Field(alias="Action")
 
 
@@ -23,7 +25,6 @@ class ForcepointRule(BaseModel):
             elif isinstance(addr, IPvAnyNetwork):
                 continue
             else:
-                print(f"############ {type(addr)}")
                 raise TypeError("source address can be either an ip or a network")
         
     def get_networks(self):
@@ -34,7 +35,7 @@ class ForcepointRule(BaseModel):
                 yield addr
             else:
                 raise TypeError("source address can be either an ip or a network")
-        
+
     def get_services(self):
         yield from self.services
 
