@@ -3,24 +3,44 @@
     display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 10px;
+  margin: 0px;
+  color: black;
+  }
+
+  .header {
+    color: white;
   }
   
   .exportButton {
     margin: 10px 0;
+    flex: 1;
+    text-align: center;
+    background-color: #45bead;
+    cursor: pointer;
   }
 
-  /*prolly not needed in the long run, if the reset function is also changed/removed*/
+  /*
+  colors: 45bead, 
+  prolly not needed in the long run, if the reset function is also changed/removed*/
   .resetButton {
     margin-right: 30px;
+    text-align: center;
+    cursor: pointer;
+    flex: 1;
+    background-color: #45bead;
   }
 
   .addRuleButton {
     margin: 10px 0;
+    flex: 1;
+    text-align: center;
+    background-color: #45bead;
+    cursor: pointer;
   }
 
   .table {
     border-collapse: collapse;
+    background-color: #6dcbbf;
   }
 
   .rowActions {
@@ -30,10 +50,17 @@
   
   .rowActions button {
     flex: 1;
+    text-align: center;
+    background-color: #c3efe9ca;
+    cursor: pointer;
   }
   
   th, td {
-    border: 1px solid #dddddd;
     text-align: left;
     padding: 4px;
+  }
+
+  .editableFields {
+    border: black;
+    border-style: inset;
   }
