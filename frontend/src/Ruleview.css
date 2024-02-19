@@ -1,10 +1,7 @@
 /* Stylesheet for ruleview */
+
 .RuleviewCSS {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0px;
-  color: black;
+  max-width: 100%;
 }
 
 .header {
@@ -13,7 +10,6 @@
 
 .exportButton {
   margin: 10px 0;
-  flex: 1;
   text-align: center;
   background-color: var(--primary);
   color: var(--on-primary);
@@ -21,14 +17,10 @@
   border-radius: 0.25rem;
 }
 
-/*
-  colors: 45bead, 
-  prolly not needed in the long run, if the reset function is also changed/removed*/
 .resetButton {
   margin-right: 30px;
   text-align: center;
   cursor: pointer;
-  flex: 1;
   background-color: var(--primary);
   color: var(--on-primary);
   border-radius: 0.25rem;
@@ -36,7 +28,6 @@
 
 .addRuleButton {
   margin: 10px 0;
-  flex: 1;
   text-align: center;
   background-color: var(--primary);
   color: var(--on-primary);
@@ -44,40 +35,25 @@
   border-radius: 0.25rem;
 }
 
- /* #table-container {
-  background-color: var(--outline-variant);
+#table-container {
+  background-color: var(--surface-container);
   border-radius: 0.5rem;
+  border: 1px solid var(--outline-variant);
   overflow: hidden;
-} */
+}
 
 .table {
-  background-color: var(--surface-container);
-  color: var(--on-surface);
-  border: var(--outline-variant);
-  border-style: solid;
-  border-width: 0.1rem;
   border-collapse: collapse;
-  -moz-border-radius:10px;
-  -webkit-border-radius:10px;
-  border-radius:10px
+  display: block;
+  overflow-x: auto;
 }
 
-.rowActions {
-  display: flex;
-  gap: 5px;
+.table thead tr {
+  border-bottom: 1px solid var(--outline-variant);
 }
 
-.rowActions button {
-  flex: 1;
-  text-align: center;
-  background-color: var(--secondary);
-  color: var(--on-secondary);
-  cursor: pointer;
-  border-radius: 0.25rem;
-  border-style: solid;
-  border-width: 0.1rem;
-  border-color: var(--on-surface-variant);
-  
+.table tbody tr:not(:first-child) {
+  border-top: 1px solid var(--outline-variant);
 }
 
 th,
@@ -86,22 +62,22 @@ td {
   padding: 0.5rem;
 }
 
-tr {
-  border-top: 1px solid var(--outline-variant);
+.rowActions {
+  /*   display: flex; */
+  white-space: nowrap;
 }
 
-table tr:last-child td:first-child {
-  border-bottom-left-radius: 10px;
-  border-color: green;
-}
-table tr:last-child td:last-child {
-  border-bottom-right-radius: 10px;
-  border-color: green;
+.rowActions button {
+  text-align: center;
+  margin: 2px;
+  background-color: var(--secondary);
+  color: var(--on-secondary);
+  cursor: pointer;
+  border-radius: 0.25rem;
+  border: 0.1rem solid var(--on-surface-variant);
 }
 
 .editableFields {
-  border: var(--outline-colour);
-  border-style: solid;
-  border-width: 0.1rem;
+  border: 0.1rem solid var(--outline-colour);
   border-radius: 0.25rem;
 }
