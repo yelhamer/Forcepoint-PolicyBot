@@ -140,7 +140,7 @@ const Ruleview = ({initialTable}) => {
       <div>
         <button className='resetButton' onClick={handleReset}>Reset</button>
         <button className="exportButton" onClick={handleExport}>Export XML</button>
-        <table className='table'>
+        <div id='table-container'><table className='table'>
           <thead>
             <tr>
               <th>Move rules</th>
@@ -220,7 +220,8 @@ const Ruleview = ({initialTable}) => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
+        
         <div>
           <button className='addRuleButton' onClick={handleAddRow}>Add Rule</button>
         </div>

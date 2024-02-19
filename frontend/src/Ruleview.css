@@ -44,14 +44,22 @@
   border-radius: 0.25rem;
 }
 
+ /* #table-container {
+  background-color: var(--outline-variant);
+  border-radius: 0.5rem;
+  overflow: hidden;
+} */
+
 .table {
   background-color: var(--surface-container);
   color: var(--on-surface);
   border: var(--outline-variant);
   border-style: solid;
   border-width: 0.1rem;
-  border-radius: 0.25rem;
-  border-collapse: separate;
+  border-collapse: collapse;
+  -moz-border-radius:10px;
+  -webkit-border-radius:10px;
+  border-radius:10px
 }
 
 .rowActions {
@@ -66,12 +74,29 @@
   color: var(--on-secondary);
   cursor: pointer;
   border-radius: 0.25rem;
+  border-style: solid;
+  border-width: 0.1rem;
+  border-color: var(--on-surface-variant);
+  
 }
 
 th,
 td {
   text-align: left;
-  padding: 4px;
+  padding: 0.5rem;
+}
+
+tr {
+  border-top: 1px solid var(--outline-variant);
+}
+
+table tr:last-child td:first-child {
+  border-bottom-left-radius: 10px;
+  border-color: green;
+}
+table tr:last-child td:last-child {
+  border-bottom-right-radius: 10px;
+  border-color: green;
 }
 
 .editableFields {
