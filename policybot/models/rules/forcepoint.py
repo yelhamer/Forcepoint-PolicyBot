@@ -1,7 +1,9 @@
 from models.rules.base_rule import BaseRuleSet, ActionsEnum
 from pydantic import BaseModel, Field
 from typing import List, Union, Tuple, Dict
-from pydantic.networks import IPvAnyAddress, IPvAnyNetwork, IPv4Address
+from pydantic.networks import IPvAnyAddress, IPvAnyNetwork
+from ipaddress import _BaseAddress as IPAddress
+from ipaddress import _BaseNetwork as IPNetwork
 
 class ForcepointActions(ActionsEnum):
     ALLOW = "allow"
@@ -20,18 +22,18 @@ class ForcepointRule(BaseModel):
 
     def get_addresses(self):
         for addr in (self.src_addrs + self.dst_addrs):
-            if isinstance(addr, IPv4Address):
+            if isinstance(addr, IPAddress):
                 yield addr
-            elif isinstance(addr, IPvAnyNetwork):
+            elif isinstance(addr, IPNetwork):
                 continue
             else:
                 raise TypeError("source address can be either an ip or a network")
         
     def get_networks(self):
         for addr in (self.src_addrs + self.dst_addrs):
-            if isinstance(addr, IPvAnyAddress):
+            if isinstance(addr, IPAddress):
                 continue
-            elif isinstance(addr, IPvAnyNetwork):
+            elif isinstance(addr, IPNetwork):
                 yield addr
             else:
                 raise TypeError("source address can be either an ip or a network")
@@ -43,19 +45,19 @@ class ForcepointRule(BaseModel):
         sources = []
         destinations = []
         services = []
-        preamble = [f"      <rule_entry name=\"{name}\" is_disabled=\"false\" parent_rule-ref=\"Access rule: insert point\" rank=\"{rank}\">", "        <access_rule>", "          <match_part>"]
-        postamble = ["          </match_part>", "        </access_rule>", "      </rule_entry>"]
+        preamble = ["  "*3+f"<rule_entry name=\"{name}\" is_disabled=\"false\" parent_rule-ref=\"Access rule: insert point\" rank=\"{rank}\">", "  "*4+"<access_rule>", "          <match_part>"]
+        postamble = ["  "*5+"</match_part>", "  "*4+"</access_rule>", "  "*3+"</rule_entry>"]
         for addr in self.src_addrs:
-            sources.append(f"              <match_source_ref type=\"network_element\" value=\"{addr_refs[addr]}\"/>")
+            sources.append("  "*7+f"<match_source_ref type=\"network_element\" value=\"{addr_refs[addr]}\"/>")
         for addr in self.dst_addrs:
-            destinations.append(f"              <match_destination_ref type=\"network_element\" value=\"{addr_refs[addr]}\"/>")
+            destinations.append("  "*7+f"<match_destination_ref type=\"network_element\" value=\"{addr_refs[addr]}\"/>")
         for service in self.services:
-            services.append(f"              <match_service_ref type=\"service\" value=\"{service_refs[service]}\"/>")
+            services.append("  "*7+f"<match_service_ref type=\"service\" value=\"{service_refs[service]}\"/>")
 
-        sources = ["            <match_sources>"] + sources + ["            </match_sources>"]
-        destinations = ["            <match_destinations>"] + destinations + ["            </match_destinations>"]
-        services = ["            <match_services>"] + services + ["            </match_services>"]
-        actions = [f"            <action type=\"{self.action}\">"]
+        sources = ["  "*6+"<match_sources>"] + sources + ["  "*6+"</match_sources>"]
+        destinations = ["  "*6+"<match_destinations>"] + destinations + ["  "*6+"</match_destinations>"]
+        services = ["  "*6+"<match_services>"] + services + ["  "*6+"</match_services>"]
+        actions = ["  "*6+f"<action type=\"{self.action}\">"]
 
         return "\n".join(preamble+sources+destinations+services+actions+postamble)
 
@@ -73,9 +75,9 @@ class ForcePointRuleSet(BaseRuleSet):
             addrs.update(rule.get_addresses())
 
         for addr in addrs:
-            if isinstance(addr, IPv4Address):
+            if isinstance(addr, IPAddress):
                 addr_refs[addr] = f"{addr}"
-            elif isinstance(addr, IPvAnyNetwork):
+            elif isinstance(addr, IPNetwork):
                 addr_refs[addr] = f"network-{addr}"
             else:
                 print(addr)
@@ -112,9 +114,9 @@ class ForcePointRuleSet(BaseRuleSet):
         service_refs = self.get_all_service_refs()
         
         for addr, name in addr_refs.items():
-            if isinstance(addr, IPv4Address):
+            if isinstance(addr, IPAddress):
                 hosts.append(f"  <host name=\"{name}\">\n    <mvia_address address={addr}/>\n  </host>")
-            elif isinstance(addr, IPvAnyNetwork):
+            elif isinstance(addr, IPNetwork):
                 networks.append(f"  <network ipv{addr.version}_network={addr} name=\"{name}\"/>")
             else:
                 raise TypeError(f"{addr} is not a valid address")
