@@ -5,11 +5,13 @@ from pydantic.networks import IPvAnyAddress, IPvAnyNetwork
 from ipaddress import _BaseAddress as IPAddress
 from ipaddress import _BaseNetwork as IPNetwork
 
+
 class ForcepointActions(ActionsEnum):
     ALLOW = "allow"
     CONTINUE = "continue"
     DISCARD = "discard"
     REFUSE = "refuse"
+
 
 class ForcepointRule(BaseModel):
     src_addrs: List[Union[IPvAnyAddress, IPvAnyNetwork]] = Field(alias="Source")
@@ -47,6 +49,7 @@ class ForcepointRule(BaseModel):
         services = []
         preamble = ["  "*3+f"<rule_entry name=\"{name}\" is_disabled=\"false\" parent_rule-ref=\"Access rule: insert point\" rank=\"{rank}\">", "  "*4+"<access_rule>", "          <match_part>"]
         postamble = ["  "*5+"</match_part>", "  "*4+"</access_rule>", "  "*3+"</rule_entry>"]
+
         for addr in self.src_addrs:
             sources.append("  "*7+f"<match_source_ref type=\"network_element\" value=\"{addr_refs[addr]}\"/>")
         for addr in self.dst_addrs:
@@ -60,7 +63,6 @@ class ForcepointRule(BaseModel):
         actions = ["  "*6+f"<action type=\"{self.action}\">"]
 
         return "\n".join(preamble+sources+destinations+services+actions+postamble)
-
 
 
 class ForcePointRuleSet(BaseRuleSet):
@@ -102,13 +104,13 @@ class ForcePointRuleSet(BaseRuleSet):
         networks = []
         services = []
         rules = []
+        policy = []
+
         preamble = ["<?xml version='1.0' encoding='UTF-8' ?>",
                "<DOCTYPE generic_import_export SYSTEM \"generic_import_export_v7.0.dtd\">",
                "<generic_import_export build=\"11323\" update_package_version=\"1568\">",
                ]
         postamble = ["</generic_import_export>"]
-        rules = []
-        policy = []
 
         addr_refs = self.get_all_addr_refs()
         service_refs = self.get_all_service_refs()
@@ -127,11 +129,11 @@ class ForcePointRuleSet(BaseRuleSet):
         for i, rule in enumerate(self.root, start=1):
             rules.append(rule.to_xml(name=f"{rule_name}-{i}", rank=i, addr_refs=addr_refs, service_refs=service_refs))
         
-        policy.append(f"  <fw_policy name=\"{rule_name}\">")
-        policy.append("    <access_entry>")
-        policy = policy + rules
-        policy.append("    </access_policy>")
-        policy.append("  </fw_policy>")
+        policy.append("  "+f"<fw_policy name=\"{rule_name}\">")
+        policy.append("  "*2+"<access_entry>")
+        policy += rules
+        policy.append("  "*2+"</access_policy>")
+        policy.append("  "+"</fw_policy>")
 
         rule_xml = preamble + policy + networks + hosts + services + postamble
 
