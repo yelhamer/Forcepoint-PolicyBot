@@ -41,7 +41,7 @@ class ForcePointLogEntry(BaseLogEntry):
         return super().__eq__(other)
 
     def __hash__(self) -> int:
-        return hash((self.src_ip, self.dst_ip, self.src_port, self.dst_port, self.service))
+        return hash((self.src_ip, self.dst_ip, self.dst_port, self.service))
 
 
 class ForcePointTrafficLog(BaseTrafficLog):
