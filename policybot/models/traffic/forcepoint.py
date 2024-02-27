@@ -1,13 +1,13 @@
 from pydantic import field_validator, Field
-from pydantic.networks import IPvAnyAddress
+from pydantic.networks import IPvAnyNetwork
 from datetime import datetime
 from typing import Set, List
 from models.traffic.base_traffic import BaseLogEntry, BaseTrafficLog
 
 
 class ForcePointLogEntry(BaseLogEntry):
-    src_ip: IPvAnyAddress = Field(alias="Src")
-    dst_ip: IPvAnyAddress = Field(alias="Dst")
+    src_ip: IPvAnyNetwork = Field(alias="Src")
+    dst_ip: IPvAnyNetwork = Field(alias="Dst")
     src_port: int = Field(alias="Sport")
     dst_port: int = Field(alias="Dport")
     service: str = Field(alias="Service")
@@ -41,7 +41,7 @@ class ForcePointLogEntry(BaseLogEntry):
         return super().__eq__(other)
 
     def __hash__(self) -> int:
-        return hash((self.src_ip, self.dst_ip, self.src_port, self.dst_port, self.service))
+        return hash((self.src_ip, self.dst_ip, self.dst_port, self.service))
 
 
 class ForcePointTrafficLog(BaseTrafficLog):

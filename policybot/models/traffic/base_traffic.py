@@ -1,12 +1,12 @@
 import abc
 from pydantic import BaseModel, RootModel
 from typing import Set
-from pydantic.networks import IPvAnyAddress
+from pydantic.networks import IPvAnyNetwork
 
 
 class BaseLogEntry(BaseModel, abc.ABC):
-    src_ip: IPvAnyAddress
-    dst_ip: IPvAnyAddress
+    src_ip: IPvAnyNetwork
+    dst_ip: IPvAnyNetwork
     src_port: int
     dst_port: int
     service: str
@@ -14,12 +14,11 @@ class BaseLogEntry(BaseModel, abc.ABC):
     def __eq__(self, other: "BaseLogEntry") -> bool:
         return (self.src_ip == other.src_ip
             and self.dst_ip == other.dst_ip
-            and self.src_port == other.src_port
             and self.dst_port == other.dst_port
             and self.service == other.service)
 
     def __hash__(self) -> int:
-        return hash((self.src_ip, self.dst_ip, self.src_port, self.dst_port, self.service))
+        return hash((self.src_ip, self.dst_ip, self.dst_port, self.service))
 
 
 class BaseTrafficLog(RootModel, abc.ABC):
