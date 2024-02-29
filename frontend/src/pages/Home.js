@@ -34,34 +34,8 @@ function Home() {
     //setData(response);  //<- TO DO this one can be used when the response matches the format needed
     setData([
       // This data is just for testing purposes.
-      {
-        Source: '10.178.0.0/16',
-        Destination: '10.150.103.106',
-        Service: ['TCP', 'Do', 'Re', 'Mi'],
-        Port: '453',
-        Action: 'Allow',
-      },
-      {
-        Source: '10.178.0.0/16',
-        Destination: '10.18.93.109',
-        Service: ['HTTP'],
-        Port: '2',
-        Action: 'Allow',
-      },
-      {
-        Source: '10.78.0.0/16',
-        Destination: '10.18.93.110',
-        Service: ['UDP'],
-        Port: '888',
-        Action: 'Allow',
-      },
-      {
-        Source: '10.78.41.214',
-        Destination: 'External',
-        Service: ['TCP', 'GGG'],
-        Port: '453',
-        Action: 'HAHA',
-      },
+      {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['TCP', 10]['FTP', 21]], 'Action': 'Allow'},
+      {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['HTTP', 2]], 'Action': 'Allow'},
     ]);
     setLoading(false);
   };
