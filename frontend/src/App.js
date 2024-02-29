@@ -1,79 +1,39 @@
 import './App.css';
-import React, { useState, useEffect } from 'react';
-import FileSelector from './fileSelector';
-import Ruleview from './Ruleview';
-import Spinner from './Spinner';
-import uploadJson from './uploadJson';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, NavLink } from 'react-router-dom';
+import Home from './pages/Home';
+import About from './pages/About';
+import Help from './pages/Help';
 
 function App() {
-  // for viewing or not viewing the different screens
-  const [showRuleview, setShowRuleview] = useState(false);
-
-  //for the loading spinner
-  const [loading, setLoading] = useState(false);
-  // for sending the data received from backend to Ruleview
-  const [data, setData] = useState([]);
-  const [response, setResponse] = useState(null);
-
-  // Can be used to change between front page and rule page
-  const handleChangeView = () => {
-    setShowRuleview((prevShowRuleview) => !prevShowRuleview);
-    if (!showRuleview) {
-      //also makes sure loading dissapears when changing back
-      setLoading(false);
-    }
-  };
-
-  const buttonText = showRuleview ? 'Back to front page' : 'To rule edit';
-
-  const handleFile = async (file) => {
-    console.log('sending data:', file); // for debugging
-    setLoading(true);
-    const response = await uploadJson(file);
-    setResponse(response);
-    //setData(response);  //<- TO DO this one can be used when the response matches the format needed
-    setData([      // This data is just for testing purposes.
-      {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['TCP', 10]['FTP', 21]], 'Action': 'Allow'},
-      {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['HTTP', 2]], 'Action': 'Allow'},
-    ]);
-    setLoading(false);
-  };
-  
-  useEffect(() => {
-    /* !!! this causes a dependency warning for the handleChangeView, but it does not seem to break the program. 
-    This is here because I did not find another good way to get the setData in hadleFile to update before changing views
-    If you find a better way, go ahead and remove this */
-    // This will run after the state has been updated
-    console.log("data in app:", data);
-
-    // Logic that depends on the updated data state and response
-    if (data.length > 0 && response) {
-      handleChangeView();
-      
-    }
-  }, [data, response]);
-
-
   return (
-    <div className="App">
-      <header className="App-header">
-        <p>PolicyBot</p>
-      </header>
-      <button className="changeView" onClick={handleChangeView}>
-        {buttonText}
-      </button>
-      <main className="App-body">
-        {showRuleview ? (
-          <Ruleview initialTable={data}/>
-        ) : loading ? (
-          <div className="Loading-indicator">
-            <Spinner />
-          </div>
-        ) : (
-          <FileSelector setLoading={setLoading} onFileSelected={handleFile} />
-        )}
-      </main>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <p>PolicyBot</p>
+          <nav>
+            <ul>
+              <li>
+                <NavLink to="/">Home</NavLink>
+              </li>
+              <li>
+                <NavLink to="/about">About</NavLink>
+              </li>
+              <li>
+                <NavLink to="/help">Help</NavLink>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <main>
+          <Routes>
+            <Route path="/about" element={<About />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/help" element={<Help />} />
+          </Routes>
+        </main>
+      </div>
+    </Router>
   );
 }
 
