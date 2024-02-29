@@ -10,7 +10,7 @@ function App() {
     <Router>
       <div className="App">
         <header className="App-header">
-          <p>PolicyBot</p>
+          <p>PolicyGen</p>
           <nav>
             <ul>
               <li>

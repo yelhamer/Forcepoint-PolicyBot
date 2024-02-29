@@ -6,6 +6,8 @@
 
 .header {
   color: var(--on-surface);
+  font-family: Open Sans;
+  font-variation-settings: 'wght' 400;
 }
 
 .exportButton {
@@ -48,6 +50,11 @@
   overflow-x: auto;
 }
 
+.table-header {
+  font-family: Open Sans;
+  font-variation-settings: 'wght' 600;
+}
+
 .table thead tr {
   border-bottom: 1px solid var(--outline-variant);
 }
@@ -63,7 +70,7 @@ td {
 }
 
 .rowActions {
-  /*   display: flex; */
+  /* display: flex; */
   white-space: nowrap;
 }
 
@@ -80,4 +87,20 @@ td {
 .editableFields {
   border: 0.1rem solid var(--outline-colour);
   border-radius: 0.25rem;
+}
+
+.move-buttons {
+  display: flex;
+}
+
+.square-button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  display: grid;
+  place-content: center;
+}
+
+.svg-filter {
+  filter: invert(100%) sepia(100%) saturate(27%) hue-rotate(81deg) brightness(106%) contrast(106%);
 }

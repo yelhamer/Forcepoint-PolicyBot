@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Kanit&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit&family=Open+Sans:ital,wdth,wght@0,75..100,300..800;1,75..100,300..800&display=swap');
 
 :root {
   --primary: #006b5f;
@@ -40,6 +40,7 @@
   min-height: 100vh;
   background-attachment: fixed;
   color: var(--on-surface);
+  font-family: Open Sans, sans-serif;
 }
 
 .App-header {
