@@ -5,7 +5,7 @@ from generators.forcepoint import ForcepointGenerator
 from models.rules.forcepoint import ForcePointRuleSet
 import uvicorn
 
-from policybot.generators.controller.generator_controller import router
+from generators.controller.generator_controller import router
 
 app = FastAPI()
 app.include_router(router)

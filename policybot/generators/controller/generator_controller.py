@@ -4,7 +4,7 @@ from fastapi.responses import JSONResponse
 import json
 from fastapi import APIRouter
 
-from policybot.generators.service.policy_generator import generate_policy
+from generators.service.policy_generator import generate_policy
 
 router = APIRouter()
 
