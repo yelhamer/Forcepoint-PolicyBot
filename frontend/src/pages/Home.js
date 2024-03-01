@@ -31,12 +31,7 @@ function Home() {
     setLoading(true);
     const response = await uploadJson(file);
     setResponse(response);
-    //setData(response);  //<- TO DO this one can be used when the response matches the format needed
-    setData([
-      // This data is just for testing purposes.
-      {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['TCP', 10]['FTP', 21]], 'Action': 'Allow'},
-      {'Source': ['10.178.0.0/16'], 'Destination': ['10.150.103.106'], 'Service': [['HTTP', 2]], 'Action': 'Allow'},
-    ]);
+    setData(response); //<- TO DO this one can be used when the response matches the format needed
     setLoading(false);
   };
 

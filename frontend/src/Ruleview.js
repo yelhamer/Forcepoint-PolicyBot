@@ -179,6 +179,8 @@ const Ruleview = ({ initialTable }) => {
       setTableData(initialData);
     };
 
+    console.log(tableData);
+
     //EditableTable return
     return (
       <div>
@@ -205,19 +207,34 @@ const Ruleview = ({ initialTable }) => {
                   <td className="rowActions">
                     <div className="move-buttons">
                       <button className="square-button" onClick={() => handleMoveToTop(rowIndex)}>
-                        <img src="/svgs/chevrons-up.svg" alt="↑↑" class="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevrons-up.svg"
+                          alt="↑↑"
+                          className="svg-filter"
+                          width={20}
+                        />
                       </button>
                       <button
                         className="square-button"
                         onClick={() => handleMoveToBottom(rowIndex)}
                       >
-                        <img src="/svgs/chevrons-down.svg" alt="↓↓" class="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevrons-down.svg"
+                          alt="↓↓"
+                          className="svg-filter"
+                          width={20}
+                        />
                       </button>
                       <button className="square-button" onClick={() => handleMoveUp(rowIndex)}>
-                        <img src="/svgs/chevron-up.svg" alt="↑" class="svg-filter" width={20} />
+                        <img src="/svgs/chevron-up.svg" alt="↑" className="svg-filter" width={20} />
                       </button>
                       <button className="square-button" onClick={() => handleMoveDown(rowIndex)}>
-                        <img src="/svgs/chevron-down.svg" alt="↓" class="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevron-down.svg"
+                          alt="↓"
+                          className="svg-filter"
+                          width={20}
+                        />
                       </button>
                     </div>
                   </td>
