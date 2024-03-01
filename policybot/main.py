@@ -14,7 +14,6 @@ app = FastAPI(middleware=[
 @app.post("/upload/traffic/forcepoint/", response_model=ForcePointRuleSet, response_model_by_alias=True)
 async def parse_forcepoint_log_file(trafficLog: ForcePointTrafficLog):
     generator = ForcepointGenerator(traffic=trafficLog)
-    print(trafficLog)
     return generator.generate_rules()
 
 @app.post("/upload/rules/forcepoint/{rule_name}")
