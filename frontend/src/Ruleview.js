@@ -3,7 +3,7 @@ import './Ruleview.css';
 import networkPorts from './networkPorts';
 import defaultPorts from './defaultPorts';
 import { copy } from './copy';
-
+import ruleExport from './ruleExport';
 import initializeUniqueServices from './uniqueGenerator';
 
 const Ruleview = ({ initialTable }) => {
@@ -167,19 +167,11 @@ const Ruleview = ({ initialTable }) => {
       }
     };
 
-    // TO DO For exporting XML, this code does NOTHING really right now.
-    const handleExport = () => {
-      // TO DO tableData is the array to be exported
-      window.alert('XML export function here...');
-    };
-
     /*TO DO This can then be modified to choose another Json file etc.? 
       now it just resets to initial values*/
     const handleReset = () => {
       setTableData(initialData);
     };
-
-    console.log(tableData);
 
     //EditableTable return
     return (
@@ -187,7 +179,7 @@ const Ruleview = ({ initialTable }) => {
         <button className="resetButton" onClick={handleReset}>
           Reset
         </button>
-        <button className="exportButton" onClick={handleExport}>
+        <button className="exportButton" onClick={() => ruleExport(tableData)}>
           Export XML
         </button>
         <div id="table-container">
