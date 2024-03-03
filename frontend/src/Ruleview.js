@@ -7,7 +7,9 @@ import ruleExport from './ruleExport';
 import initializeUniqueServices from './uniqueGenerator';
 
 const Ruleview = ({ initialTable }) => {
-  const EditableTable = () => {
+  const [exported, setExported] = useState(false);
+
+  const EditableTable = ({ onExport }) => {
     const initialData = initialTable;
     const [uniqueServices, setUniqueServices] = useState([]);
     const [ActionOptions, setActionOptions] = useState([]);
@@ -179,7 +181,13 @@ const Ruleview = ({ initialTable }) => {
         <button className="resetButton" onClick={handleReset}>
           Reset
         </button>
-        <button className="exportButton" onClick={() => ruleExport(tableData)}>
+        <button
+          className="exportButton"
+          onClick={() => {
+            ruleExport(tableData);
+            onExport();
+          }}
+        >
           Export XML
         </button>
         <div id="table-container">
@@ -318,10 +326,6 @@ const Ruleview = ({ initialTable }) => {
             Add Rule
           </button>
         </div>
-        <div>
-          <strong>Making sure the list updates correctly:</strong>
-          <pre>{JSON.stringify(tableData, null, 2)}</pre>
-        </div>
       </div>
     );
   };
@@ -329,8 +333,16 @@ const Ruleview = ({ initialTable }) => {
   //Ruleview return
   return (
     <div className="RuleviewCSS">
-      <h2 className="header">Your PolicyGen-generated firewall rules</h2>
-      <EditableTable />
+      <h2 className="header">
+        {exported
+          ? 'Your PolicyGen-generated firewall rules have been exported'
+          : 'Your PolicyGen-generated firewall rules'}
+      </h2>
+      {exported ? (
+        <p>Thank you for using PolicyGen!</p>
+      ) : (
+        <EditableTable onExport={() => setExported(true)} />
+      )}
     </div>
   );
 };
