@@ -31,7 +31,7 @@ const Ruleview = ({ initialTable }) => {
     const [tableData, setTableData] = useState(initialData);
     // console.log('tabledata: ', tableData);
 
-    //Right now updates to the "Source" in the table only edits the first Source value in tableData
+    
     const handleCellChange = (rowIndex, columnName, value) => {
       //console.log('Editing Cells...');
       setTableData((prevData) => {
@@ -50,6 +50,14 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    const handleAddSource = (rowIndex) => {
+      setTableData((prevData) => {
+        const newData = copy(prevData);
+        newData[rowIndex]['Source'] = [...newData[rowIndex]['Source'], ''];
+        return newData;
+      });
+    };
+
     const handleDestinationChange = (rowIndex, destinationIndex, value) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
@@ -62,6 +70,24 @@ const Ruleview = ({ initialTable }) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
         newData[rowIndex]['Destination'] = [...newData[rowIndex]['Destination'], '']; // Add an empty destination
+        return newData;
+      });
+    };
+
+    const handleRemoveService = (rowIndex, pairIndex) => {
+      setTableData((prevData) => {
+        const newData = copy(prevData);
+        const updatedServices = [...newData[rowIndex]['Service']];
+        updatedServices.splice(pairIndex, 1); // Remove the service at pairIndex
+        newData[rowIndex]['Service'] = updatedServices;
+        return newData;
+      });
+    };
+    
+    const handleAddService = (rowIndex) => {
+      setTableData((prevData) => {
+        const newData = copy(prevData);
+        newData[rowIndex]['Service'] = [...newData[rowIndex]['Service'], ['any', 0]]; // Add a new service value
         return newData;
       });
     };
@@ -144,14 +170,6 @@ const Ruleview = ({ initialTable }) => {
           return newData;
         }
         return prevTableData;
-      });
-    };
-
-    const handleAddSource = (rowIndex) => {
-      setTableData((prevData) => {
-        const newData = copy(prevData);
-        newData[rowIndex]['Source'] = [...newData[rowIndex]['Source'], ''];
-        return newData;
       });
     };
 
@@ -254,6 +272,8 @@ const Ruleview = ({ initialTable }) => {
                     ))}
                   </td>
                   <td>
+                  {row['Service'].length === 0 &&
+                      <button onClick={() => handleAddService(rowIndex)}>+</button>}
                     {row.Service.map((servicePair, pairIndex) => (
                       <div key={pairIndex}>
                         <select
@@ -279,6 +299,10 @@ const Ruleview = ({ initialTable }) => {
                             </option>
                           ))}
                         </select>
+                        <button onClick={(e) => handleRemoveService(rowIndex, pairIndex)}>-</button>
+                        {pairIndex === row['Service'].length - 1 &&(
+                          <button onClick={() => handleAddService(rowIndex)}>+</button>
+                        )}
                       </div>
                     ))}
                   </td>
