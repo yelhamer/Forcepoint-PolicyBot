@@ -75,6 +75,7 @@ class ForcePointRuleSet(BaseRuleSet):
 
         for rule in self.root:
             addrs.update(rule.get_addresses())
+            addrs.update(rule.get_networks())
 
         for addr in addrs:
             if isinstance(addr, IPAddress):
@@ -93,6 +94,7 @@ class ForcePointRuleSet(BaseRuleSet):
 
         for rule in self.root:
             services.update(rule.get_services())
+            services.update(rule.get_networks())
 
         for service in services:
             service_refs[service] = "/".join(map(str, service))
@@ -124,7 +126,7 @@ class ForcePointRuleSet(BaseRuleSet):
                 raise TypeError(f"{addr} is not a valid address")
             
         for service, name in service_refs.items():
-            services.append(f"  <service_tcp name=\"{name}\" min_dst_port=\"{service[1]}\">")
+            services.append(f"  <service_tcp name=\"{name}\" min_dst_port=\"{service}\">")
 
         for i, rule in enumerate(self.root, start=1):
             rules.append(rule.to_xml(name=f"{rule_name}-{i}", rank=i, addr_refs=addr_refs, service_refs=service_refs))

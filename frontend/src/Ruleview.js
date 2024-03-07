@@ -3,11 +3,13 @@ import './Ruleview.css';
 import networkPorts from './networkPorts';
 import defaultPorts from './defaultPorts';
 import { copy } from './copy';
-
+import ruleExport from './ruleExport';
 import initializeUniqueServices from './uniqueGenerator';
 
 const Ruleview = ({ initialTable }) => {
-  const EditableTable = () => {
+  const [exported, setExported] = useState(false);
+
+  const EditableTable = ({ onExport }) => {
     const initialData = initialTable;
     const [uniqueServices, setUniqueServices] = useState([]);
     const [ActionOptions, setActionOptions] = useState([]);
@@ -185,12 +187,6 @@ const Ruleview = ({ initialTable }) => {
       }
     };
 
-    // TO DO For exporting XML, this code does NOTHING really right now.
-    const handleExport = () => {
-      // TO DO tableData is the array to be exported
-      window.alert('XML export function here...');
-    };
-
     /*TO DO This can then be modified to choose another Json file etc.? 
       now it just resets to initial values*/
     const handleReset = () => {
@@ -203,7 +199,13 @@ const Ruleview = ({ initialTable }) => {
         <button className="resetButton" onClick={handleReset}>
           Reset
         </button>
-        <button className="exportButton" onClick={handleExport}>
+        <button
+          className="exportButton"
+          onClick={() => {
+            ruleExport(tableData);
+            onExport();
+          }}
+        >
           Export XML
         </button>
         <div id="table-container">
@@ -223,19 +225,34 @@ const Ruleview = ({ initialTable }) => {
                   <td className="rowActions">
                     <div className="move-buttons">
                       <button className="square-button" onClick={() => handleMoveToTop(rowIndex)}>
-                        <img src="/svgs/chevrons-up.svg" alt="↑↑" class="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevrons-up.svg"
+                          alt="↑↑"
+                          className="svg-filter"
+                          width={20}
+                        />
                       </button>
                       <button
                         className="square-button"
                         onClick={() => handleMoveToBottom(rowIndex)}
                       >
-                        <img src="/svgs/chevrons-down.svg" alt="↓↓" class="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevrons-down.svg"
+                          alt="↓↓"
+                          className="svg-filter"
+                          width={20}
+                        />
                       </button>
                       <button className="square-button" onClick={() => handleMoveUp(rowIndex)}>
-                        <img src="/svgs/chevron-up.svg" alt="↑" class="svg-filter" width={20} />
+                        <img src="/svgs/chevron-up.svg" alt="↑" className="svg-filter" width={20} />
                       </button>
                       <button className="square-button" onClick={() => handleMoveDown(rowIndex)}>
-                        <img src="/svgs/chevron-down.svg" alt="↓" class="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevron-down.svg"
+                          alt="↓"
+                          className="svg-filter"
+                          width={20}
+                        />
                       </button>
                     </div>
                   </td>
@@ -333,10 +350,6 @@ const Ruleview = ({ initialTable }) => {
             Add Rule
           </button>
         </div>
-        <div>
-          <strong>Making sure the list updates correctly:</strong>
-          <pre>{JSON.stringify(tableData, null, 2)}</pre>
-        </div>
       </div>
     );
   };
@@ -344,8 +357,16 @@ const Ruleview = ({ initialTable }) => {
   //Ruleview return
   return (
     <div className="RuleviewCSS">
-      <h2 className="header">Your PolicyGen-generated firewall rules</h2>
-      <EditableTable />
+      <h2 className="header">
+        {exported
+          ? 'Your PolicyGen-generated firewall rules have been exported'
+          : 'Your PolicyGen-generated firewall rules'}
+      </h2>
+      {exported ? (
+        <p>Thank you for using PolicyGen!</p>
+      ) : (
+        <EditableTable onExport={() => setExported(true)} />
+      )}
     </div>
   );
 };
