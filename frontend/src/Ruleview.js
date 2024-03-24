@@ -33,7 +33,6 @@ const Ruleview = ({ initialTable }) => {
     const [tableData, setTableData] = useState(initialData);
     // console.log('tabledata: ', tableData);
 
-    
     const handleCellChange = (rowIndex, columnName, value) => {
       //console.log('Editing Cells...');
       setTableData((prevData) => {
@@ -85,7 +84,7 @@ const Ruleview = ({ initialTable }) => {
         return newData;
       });
     };
-    
+
     const handleAddService = (rowIndex) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
@@ -228,7 +227,7 @@ const Ruleview = ({ initialTable }) => {
                         <img
                           src="/svgs/chevrons-up.svg"
                           alt="↑↑"
-                          className="svg-filter"
+                          className="svg-filter-white"
                           width={20}
                         />
                       </button>
@@ -239,18 +238,23 @@ const Ruleview = ({ initialTable }) => {
                         <img
                           src="/svgs/chevrons-down.svg"
                           alt="↓↓"
-                          className="svg-filter"
+                          className="svg-filter-white"
                           width={20}
                         />
                       </button>
                       <button className="square-button" onClick={() => handleMoveUp(rowIndex)}>
-                        <img src="/svgs/chevron-up.svg" alt="↑" className="svg-filter" width={20} />
+                        <img
+                          src="/svgs/chevron-up.svg"
+                          alt="↑"
+                          className="svg-filter-white"
+                          width={20}
+                        />
                       </button>
                       <button className="square-button" onClick={() => handleMoveDown(rowIndex)}>
                         <img
                           src="/svgs/chevron-down.svg"
                           alt="↓"
-                          className="svg-filter"
+                          className="svg-filter-white"
                           width={20}
                         />
                       </button>
@@ -289,8 +293,9 @@ const Ruleview = ({ initialTable }) => {
                     ))}
                   </td>
                   <td>
-                  {row['Service'].length === 0 &&
-                      <button onClick={() => handleAddService(rowIndex)}>+</button>}
+                    {row['Service'].length === 0 && (
+                      <button onClick={() => handleAddService(rowIndex)}>+</button>
+                    )}
                     {row.Service.map((servicePair, pairIndex) => (
                       <div key={pairIndex}>
                         <select
@@ -317,7 +322,7 @@ const Ruleview = ({ initialTable }) => {
                           ))}
                         </select>
                         <button onClick={(e) => handleRemoveService(rowIndex, pairIndex)}>-</button>
-                        {pairIndex === row['Service'].length - 1 &&(
+                        {pairIndex === row['Service'].length - 1 && (
                           <button onClick={() => handleAddService(rowIndex)}>+</button>
                         )}
                       </div>
@@ -336,8 +341,27 @@ const Ruleview = ({ initialTable }) => {
                     </select>
                   </td>
                   <td className="rowActions">
-                    <button onClick={() => handleDuplicateRow(rowIndex)}>Duplicate</button>
-                    <button onClick={() => handleDeleteRow(rowIndex)}>X</button>
+                    <div className="add-remove-btns">
+                      <button
+                        onClick={() => handleDuplicateRow(rowIndex)}
+                        className="square-button"
+                      >
+                        <img
+                          src="/svgs/copy.svg"
+                          alt="Duplicate"
+                          className="svg-filter-white"
+                          width={15}
+                        />
+                      </button>
+                      <button onClick={() => handleDeleteRow(rowIndex)} className="square-button">
+                        <img
+                          src="/svgs/trash.svg"
+                          alt="X"
+                          className="svg-filter-white"
+                          width={15}
+                        />
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}

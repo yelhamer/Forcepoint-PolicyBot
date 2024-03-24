@@ -1,0 +1,16 @@
+.fileSelect-label {
+  display: flex;
+}
+
+.input-field {
+  width: 11rem;
+  padding-left: 0.5rem;
+}
+
+.help-circle {
+  display: flex;
+}
+
+.help-circle-icon {
+  filter: invert(26%) sepia(98%) saturate(720%) hue-rotate(135deg) brightness(97%) contrast(101%);
+}

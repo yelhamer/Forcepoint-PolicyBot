@@ -1,5 +1,7 @@
 import React from 'react';
 import { fileContent } from './schemas';
+import { Outlet, Link } from 'react-router-dom';
+import './fileSelector.css';
 
 function FileSelector({ setLoading, onFileSelected }) {
   const handleFileSelect = (e) => {
@@ -29,10 +31,20 @@ function FileSelector({ setLoading, onFileSelected }) {
   };
 
   return (
-    <label>
-      Upload your traffic file{' '}
-      <input accept="application/json" type="file" onChange={handleFileSelect}></input>
-    </label>
+    <div>
+      <label className="fileSelect-label">
+        Upload your traffic file
+        <input
+          className="input-field"
+          accept="application/json"
+          type="file"
+          onChange={handleFileSelect}
+        ></input>
+        <Link to={'help'} title="Visit our help page to get started" className="help-circle">
+          <img src="/svgs/help-circle.svg" alt="?" className="help-circle-icon" width={20} />
+        </Link>
+      </label>
+    </div>
   );
 }
 

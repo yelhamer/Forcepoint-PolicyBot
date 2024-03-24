@@ -23,6 +23,7 @@
   --outline-colour: #6f7976;
   --outline-variant: #bec9c5;
   --surface-container: #e9efec;
+  background-color: var(--surface);
 }
 
 .App {
