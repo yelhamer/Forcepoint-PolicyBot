@@ -101,11 +101,10 @@ const Ruleview = ({ initialTable }) => {
     // Adds new rule/row to tableData
     const handleAddRow = () => {
       const newRow = {
-        Source: ['10.178.0.0/16'],
-        Destination: ['10.150.103.106'],
+        Source: [''],
+        Destination: [''],
         Service: [
-          ['HTTP', 1],
-          ['SSH', 2],
+          ['any', 0],
         ],
         Action: 'Allow',
       }; // Initial values for the new row
