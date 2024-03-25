@@ -93,6 +93,10 @@ td {
   display: flex;
 }
 
+.add-remove-btns {
+  display: flex;
+}
+
 .square-button {
   width: 20px;
   height: 20px;
@@ -101,6 +105,6 @@ td {
   place-content: center;
 }
 
-.svg-filter {
+.svg-filter-white {
   filter: invert(100%) sepia(100%) saturate(27%) hue-rotate(81deg) brightness(106%) contrast(106%);
 }
