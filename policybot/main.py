@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from models.traffic.forcepoint import ForcePointTrafficLog
 from fastapi.responses import Response
-from generators.forcepoint import ForcepointGenerator
+from generators.forcepoint import ForcepointGenerator, SecondGenerator
 from models.rules.forcepoint import ForcePointRuleSet
 import uvicorn
 from starlette.middleware import Middleware
@@ -13,7 +13,7 @@ app = FastAPI(middleware=[
 
 @app.post("/upload/traffic/forcepoint/", response_model=ForcePointRuleSet, response_model_by_alias=True)
 async def parse_forcepoint_log_file(trafficLog: ForcePointTrafficLog):
-    generator = ForcepointGenerator(traffic=trafficLog)
+    generator = SecondGenerator(traffic=trafficLog)
     return generator.generate_rules()
 
 @app.post("/upload/rules/forcepoint/{rule_name}")
