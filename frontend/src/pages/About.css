@@ -1,0 +1,12 @@
+.about-body {
+  margin-left: 1rem;
+  background-color: var(--surface);
+}
+
+mark.PolicyGen {
+  color: var(--primary);
+  background: none;
+  font-weight: bolder;
+  font-family: Kanit, sans-serif;
+  font-size: 18px;
+}
