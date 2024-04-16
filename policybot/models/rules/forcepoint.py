@@ -66,8 +66,8 @@ class ForcepointRule(BaseModel):
         sources = []
         destinations = []
         services = []
-        preamble = ["  "*3+f"<rule_entry name=\"{name}\" is_disabled=\"false\" parent_rule-ref=\"Access rule: insert point\" rank=\"{rank}\">", "  "*4+"<access_rule>", "          <match_part>"]
-        postamble = ["  "*5+"</match_part>", "  "*4+"</access_rule>", "  "*3+"</rule_entry>"]
+        preamble = ["  "*3+f"<rule_entry name=\"{name}\" is_disabled=\"false\" parent_rule_ref=\"Access rule: insert point\" rank=\"{rank}\">", "  "*4+"<access_rule>", "          <match_part>"]
+        postamble = ["  "*4+"</access_rule>", "  "*3+"</rule_entry>"]
 
         for addr in self.src_addrs:
             if addr == "External":
@@ -91,8 +91,8 @@ class ForcepointRule(BaseModel):
 
         sources = ["  "*6+"<match_sources>"] + sources + ["  "*6+"</match_sources>"]
         destinations = ["  "*6+"<match_destinations>"] + destinations + ["  "*6+"</match_destinations>"]
-        services = ["  "*6+"<match_services>"] + services + ["  "*6+"</match_services>"]
-        actions = ["  "*6+f"<action type=\"{self.action}\" />"]
+        services = ["  "*6+"<match_services>"] + services + ["  "*6+"</match_services>\n"+"  "*5+"</match_part>"]
+        actions = ["  "*5+f"<action type=\"{self.action}\" />"]
 
         return "\n".join(preamble+sources+destinations+services+actions+postamble)
 
@@ -165,7 +165,7 @@ class ForcePointRuleSet(BaseRuleSet):
         for i, rule in enumerate(self.root, start=1):
             rules.append(rule.to_xml(name=f"{rule_name}-{i}", rank=i, addr_refs=addr_refs, service_refs=service_refs))
         
-        policy.append("  "+f"<fw_policy name=\"{rule_name}\">")
+        policy.append("  "+f"<fw_policy name=\"{rule_name}\" template_policy_ref=\"Firewall Template 1\">")
         policy.append("  "*2+"<access_entry>")
         policy += rules
         policy.append("  "*2+"</access_entry>")
