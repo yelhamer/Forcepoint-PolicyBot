@@ -13,11 +13,9 @@ const Ruleview = ({ initialTable }) => {
     const initialData = initialTable;
     const [uniqueServices, setUniqueServices] = useState([]);
     const [ActionOptions, setActionOptions] = useState([]);
-    //console.log("unique services: ", uniqueServices);
 
     useEffect(() => {
-      //This code only needs to run once in the beginning, so i put it in an useEffect.
-      //It will run only when initialData is updated.
+      //useEffect will run only when initialData is updated, aka once in the beginning.
       setUniqueServices(initializeUniqueServices(initialData, networkPorts));
 
       // Creates a list for available actions, which are then filtered with uniqueActions and ActionOptions
@@ -31,10 +29,9 @@ const Ruleview = ({ initialTable }) => {
     }, [initialData]);
 
     const [tableData, setTableData] = useState(initialData);
-    // console.log('tabledata: ', tableData);
 
+    // handles change in service and action
     const handleCellChange = (rowIndex, columnName, value) => {
-      //console.log('Editing Cells...');
       setTableData((prevData) => {
         const newData = copy(prevData);
         newData[rowIndex][columnName] = value;
@@ -42,8 +39,8 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    // Handles typing in source field
     const handleSourceChange = (rowIndex, sourceIndex, value) => {
-      //console.log('Editing Source..');
       setTableData((prevData) => {
         const newData = copy(prevData);
         newData[rowIndex]['Source'][sourceIndex] = value;
@@ -51,6 +48,7 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    //Adds single source element
     const handleAddSource = (rowIndex) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
@@ -59,6 +57,7 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    //Handles typing in the destination field
     const handleDestinationChange = (rowIndex, destinationIndex, value) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
@@ -67,6 +66,7 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    //Adds single destination element
     const handleAddDestination = (rowIndex) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
@@ -75,20 +75,22 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    //Removes single service element
     const handleRemoveService = (rowIndex, pairIndex) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
         const updatedServices = [...newData[rowIndex]['Service']];
-        updatedServices.splice(pairIndex, 1); // Remove the service at pairIndex
+        updatedServices.splice(pairIndex, 1); 
         newData[rowIndex]['Service'] = updatedServices;
         return newData;
       });
     };
 
+    //Adds single service element
     const handleAddService = (rowIndex) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
-        newData[rowIndex]['Service'] = [...newData[rowIndex]['Service'], ['any', 0]]; // Add a new service value
+        newData[rowIndex]['Service'] = [...newData[rowIndex]['Service'], ['any', 0]]; 
         return newData;
       });
     };
@@ -107,8 +109,7 @@ const Ruleview = ({ initialTable }) => {
           ['any', 0],
         ],
         Action: 'Allow',
-      }; // Initial values for the new row
-      //console.log('adding rule:  ', newRow);
+      }; 
       setTableData((prevData) => [...prevData, newRow]);
     };
 
@@ -173,6 +174,7 @@ const Ruleview = ({ initialTable }) => {
       });
     };
 
+    //Deletes single source or dest when pressing backspace when field is empty
     const handleKeyDown = (e, rowIndex, field, index) => {
       if (e.key === 'Backspace' && e.target.value === '') {
         setTableData((prevData) => {
@@ -185,8 +187,8 @@ const Ruleview = ({ initialTable }) => {
       }
     };
 
-    /*TO DO This can then be modified to choose another Json file etc.? 
-      now it just resets to initial values*/
+   
+      //Resets to initial values
     const handleReset = () => {
       setTableData(initialData);
     };
@@ -301,9 +303,9 @@ const Ruleview = ({ initialTable }) => {
                           value={`${servicePair[0]}-${servicePair[1]}`}
                           onChange={(e) => {
                             const [service, port] = e.target.value.split('-');
-                            const updatedServices = [...row.Service]; // Create a copy of the service array
-                            updatedServices[pairIndex] = [service, parseInt(port)]; // Update the selected pair
-                            handleCellChange(rowIndex, 'Service', updatedServices); // Pass the updated array to the handler
+                            const updatedServices = [...row.Service];
+                            updatedServices[pairIndex] = [service, parseInt(port)]; 
+                            handleCellChange(rowIndex, 'Service', updatedServices); 
                           }}
                         >
                           {uniqueServices.map((option, index) => (

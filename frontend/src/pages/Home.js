@@ -27,20 +27,19 @@ function Home() {
   const buttonText = showRuleview ? 'Back to front page' : 'To rule edit';
 
   const handleFile = async (file) => {
-    console.log('sending data:', file); // for debugging
+    console.log('sending data:', file);
     setLoading(true);
     const response = await uploadJson(file);
     setResponse(response);
-    setData(response); //<- TO DO this one can be used when the response matches the format needed
+    setData(response);
     setLoading(false);
   };
 
   useEffect(() => {
     /* !!! this causes a dependency warning for the handleChangeView, but it does not seem to break the program. 
-    This is here because I did not find another good way to get the setData in hadleFile to update before changing views
-    If you find a better way, go ahead and remove this */
+    I did not find another good way to get the setData in hadleFile to update before changing views */
     // This will run after the state has been updated
-    console.log('data in app:', data);
+    console.log('data from backend:', data);
 
     // Logic that depends on the updated data state and response
     if (data.length > 0 && response) {
