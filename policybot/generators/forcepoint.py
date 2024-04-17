@@ -1,36 +1,37 @@
 from generators.base_generator import BaseGenerator
 from models.traffic.forcepoint import ForcePointTrafficLog
-from models.rules.forcepoint import ForcePointRuleSet, ForcepointRule
+from models.rules.forcepoint import ForcePointRuleSet, ForcepointRule, ExternalNetwork, AnyNetwork, AnyPort, NetworksEnum
 from pydantic.networks import IPv4Address
 import itertools
 
 
 class SecondGenerator(BaseGenerator):
-    def __init__(self, traffic: ForcePointTrafficLog) -> None:
+    def __init__(self, traffic: ForcePointTrafficLog, subnet_creation_threshhold: int = 4) -> None:
         self.traffic = traffic
+        self.subnet_creation_threshhold = subnet_creation_threshhold
 
     def generate_rules(self, *options) -> ForcePointRuleSet:
-        ip_count = {IPv4Address('0.0.0.0'): 0}
+        ip_count = {ExternalNetwork: 0}
         for packet in self.traffic:
             # set external IPs
             if packet.dst_ip.is_global:
-                packet.dst_ip = IPv4Address('0.0.0.0')
+                packet.dst_ip = ExternalNetwork
             elif packet.dst_ip in ip_count:
                 ip_count[packet.dst_ip] += 1
             else:
                 ip_count[packet.dst_ip] = 1
 
             if packet.src_ip.is_global:
-                packet.src_ip = IPv4Address('0.0.0.0')
+                packet.src_ip = ExternalNetwork
             elif packet.src_ip in ip_count:
                 ip_count[packet.src_ip] += 1
             else:
                 ip_count[packet.src_ip] = 1
 
         for packet in self.traffic:
-            if ip_count[packet.src_ip] > 4:
+            if ip_count[packet.src_ip] > self.subnet_creation_threshhold:
                 packet.src_ip = packet.src_ip.supernet(new_prefix=24)
-            if ip_count[packet.dst_ip] > 4:
+            if ip_count[packet.dst_ip] > self.subnet_creation_threshhold:
                 packet.dst_ip = packet.dst_ip.supernet(new_prefix=24)
  
         traffic_by_dst = dict()
@@ -91,17 +92,27 @@ class SecondGenerator(BaseGenerator):
         for srcs, n_rules in rules_by_src.items():
             dsts = list(map(lambda r: r.dst_addrs, n_rules))
             dsts = list(set(itertools.chain.from_iterable(dsts)))
+            for i, net in enumerate(dsts):
+                if isinstance(net, str):
+                    continue
+                if net.prefixlen == 32:
+                    dsts[i] = net.network_address
             svcs = list(map(lambda r: r.services, n_rules))
             svcs = list(set(itertools.chain.from_iterable(svcs)))
             srcs = list(set(srcs))
+            for i, net in enumerate(srcs):
+                if isinstance(net, str):
+                    continue
+                if net.prefixlen == 32:
+                    srcs[i] = net.network_address
             rule = ForcepointRule(Source=srcs, Destination=dsts, Service=svcs, Action="allow")
             new_rules.append(rule)
 
+        new_rules.append(ForcepointRule(Source=[AnyNetwork], Destination=[AnyNetwork], Service=[AnyPort], Action="discard"))
+
 
         return ForcePointRuleSet(new_rules)
-    
 
-    
 
 class ForcepointGenerator(BaseGenerator):
     def __init__(self, traffic: ForcePointTrafficLog) -> None:
@@ -119,7 +130,7 @@ class ForcepointGenerator(BaseGenerator):
                 subnets[network].append(packet)
             
             if packet.dst_ip.is_global:
-                packet.dst_ip = IPv4Address('0.0.0.0')
+                packet.dst_ip = ExternalNetwork
 
         for net, packets in subnets.items():
             if len(packets) > 3:
