@@ -9,10 +9,10 @@ const initializeUniqueServices = (initialData, networkPorts) => {
         initialData.flatMap((row) =>
             Object.entries(row)
                 .filter(([key]) => key === 'Service')
-                .map(([, value]) => ({ Service: value.map(pair => pair[0]), Port: value.map(pair => pair[1]) })) // Adjusted here
+                .map(([, value]) => ({ Service: value.map(pair => pair[0]), Port: value.map(pair => pair[1]) })) 
         )
     ),
-    ...networkPorts.map(([service, port]) => ({ Service: [service], Port: [port] })), // Adjusted here
+    ...networkPorts.map(([service, port]) => ({ Service: [service], Port: [port] })), 
   ];  
 
   const uniqueServicesSet = new Set();
@@ -22,7 +22,7 @@ const initializeUniqueServices = (initialData, networkPorts) => {
     const services = flattenArray(option.Service);
     services.forEach((service) => {
         ports.forEach((port) => {
-            uniqueServicesSet.add(JSON.stringify([service, port])); // Adjusted here
+            uniqueServicesSet.add(JSON.stringify([service, port])); 
         });
     });
   });
