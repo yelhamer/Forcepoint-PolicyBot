@@ -19,7 +19,7 @@ const Ruleview = ({ initialTable }) => {
       setUniqueServices(initializeUniqueServices(initialData, networkPorts));
 
       // Creates a list for available actions, which are then filtered with uniqueActions and ActionOptions
-      const availableActions = ['Allow', 'Deny', 'Drop', 'Reject', 'CustomAction'];
+      const availableActions = ['allow', 'continue', 'discard', 'refuse'];
 
       const uniqueActions = Array.from(
         new Set([...initialData.map((row) => row.Action), ...availableActions])
@@ -90,7 +90,7 @@ const Ruleview = ({ initialTable }) => {
     const handleAddService = (rowIndex) => {
       setTableData((prevData) => {
         const newData = copy(prevData);
-        newData[rowIndex]['Service'] = [...newData[rowIndex]['Service'], ['any', 0]]; 
+        newData[rowIndex]['Service'] = [...newData[rowIndex]['Service'], ['Any', 0]]; 
         return newData;
       });
     };
@@ -106,7 +106,7 @@ const Ruleview = ({ initialTable }) => {
         Source: [''],
         Destination: [''],
         Service: [
-          ['any', 0],
+          ['Any', 0],
         ],
         Action: 'Allow',
       }; 
