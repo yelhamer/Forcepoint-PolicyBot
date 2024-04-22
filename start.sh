@@ -2,7 +2,7 @@
 
 # Start backend
 cd policybot
-python3.12 main.py &
+python3 main.py &
 
 # Start frontend
 cd ../frontend
