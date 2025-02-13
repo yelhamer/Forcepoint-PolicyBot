@@ -35,17 +35,14 @@ function Home() {
     setLoading(false);
   };
 
-  useEffect(() => {
-    /* !!! this causes a dependency warning for the handleChangeView, but it does not seem to break the program. 
-    I did not find another good way to get the setData in hadleFile to update before changing views */
-    // This will run after the state has been updated
-    console.log('data from backend:', data);
-
-    // Logic that depends on the updated data state and response
-    if (data.length > 0 && response) {
-      handleChangeView();
-    }
-  }, [data, response]);
+    //to avoid the dependency warning for the handleChangeView, Instead of calling the handleChangeView() function,
+    //directly set the setShowRuleView(true)
+    useEffect(() => {
+      console.log('data from backend:', data);
+      if (data.length > 0 && response) {
+        setShowRuleview(true);  // Instead of calling handleChangeView()
+      }
+    }, [data, response]);
 
   return (
     <div className="Home">
